@@ -29,6 +29,7 @@ function App() {
     <AuthProvider>
       <NotificationProvider>
         <BrowserRouter>
+    <div className="flex flex-col min-h-screen bg-gray-50">
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -62,6 +63,7 @@ function App() {
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+        </div>
         </BrowserRouter>
       </NotificationProvider>
     </AuthProvider>

@@ -59,30 +59,30 @@ function Analytics() {
   ]
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-primary min-h-screen text-textPrimary">
       <h2 className="text-2xl font-bold mb-6">Analytics Dashboard</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Summary cards */}
-        <div className="bg-white rounded shadow p-4">
+        <div className="bg-card rounded shadow p-4">
           <h3 className="font-medium">Total Complaints</h3>
           <p className="text-3xl font-semibold">{data.total_complaints}</p>
         </div>
-        <div className="bg-white rounded shadow p-4">
+        <div className="bg-card rounded shadow p-4">
           <h3 className="font-medium">Open</h3>
           <p className="text-3xl font-semibold">{data.open}</p>
         </div>
-        <div className="bg-white rounded shadow p-4">
+        <div className="bg-card rounded shadow p-4">
           <h3 className="font-medium">Resolved</h3>
           <p className="text-3xl font-semibold">{data.resolved}</p>
         </div>
-        <div className="bg-white rounded shadow p-4 md:col-span-2 lg:col-span-1">
+        <div className="bg-card rounded shadow p-4 md:col-span-2 lg:col-span-1 text-textPrimary">
           <h3 className="font-medium mb-2">Average Resolution Time (days)</h3>
           <p className="text-2xl">{data.avg_resolution_time_days.toFixed(1)}</p>
         </div>
       </div>
 
       {/* Top categories bar chart */}
-      <div className="mt-8 bg-white rounded shadow p-4">
+      <div className="mt-8 bg-card rounded shadow p-4 text-textPrimary">
         <h3 className="font-medium mb-4">Top Categories</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={topCategories} layout="vertical" margin={{ left: 40, right: 20 }}>
@@ -97,7 +97,7 @@ function Analytics() {
       </div>
 
       {/* Top locations bar chart */}
-      <div className="mt-8 bg-white rounded shadow p-4">
+      <div className="mt-8 bg-card rounded shadow p-4 text-textPrimary">
         <h3 className="font-medium mb-4">Top Locations</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={topLocations} layout="vertical" margin={{ left: 40, right: 20 }}>
@@ -112,7 +112,7 @@ function Analytics() {
       </div>
 
       {/* Simple weekly timeline line chart (placeholder) */}
-      <div className="mt-8 bg-white rounded shadow p-4">
+      <div className="mt-8 bg-card rounded shadow p-4 text-textPrimary">
         <h3 className="font-medium mb-4">Complaints Over the Last Week</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={timeline} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>

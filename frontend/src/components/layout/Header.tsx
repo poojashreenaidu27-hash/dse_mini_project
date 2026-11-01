@@ -1,4 +1,3 @@
-// src/components/layout/Header.tsx
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
@@ -8,36 +7,40 @@ export const Header: React.FC = () => {
   const { user, logout } = useAuth()
 
   return (
-    <header className="bg-gray-800 text-white py-3 px-4 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold">
-        CampusFix
+    <header className="bg-primary border-b border-border text-primary flex items-center justify-between px-6 py-3">
+      <Link to="/" className="flex items-center space-x-2">
+        {/* Simple logo placeholder */}
+        <div className="w-8 h-8 bg-primary-hover rounded-full" />
+        <span className="text-xl font-bold text-lavender">CampusFix</span>
       </Link>
-      <nav className="space-x-4">
-        {user ? (
+      <nav className="space-x-4 hidden md:flex">
+        {user && (
           <>
-            <Link to="/complaint" className="hover:underline">
+            <Link to="/complaint" className="hover:underline text-primary">
               Submit Complaint
             </Link>
             {user.role === 'admin' && (
-              <Link to="/admin" className="hover:underline">
+              <Link to="/admin" className="hover:underline text-primary">
                 Admin Dashboard
               </Link>
             )}
-            <Button onClick={logout} className="bg-gray-600 hover:bg-gray-700">
+            <Button onClick={logout} className="bg-secondary hover:bg-secondary hover:text-white">
               Logout
             </Button>
           </>
-        ) : (
+        )}
+        {!user && (
           <>
-            <Link to="/login" className="hover:underline">
-              Login
+            <Link to="/login" className="hover:underline text-primary">
+              Sign In
             </Link>
-            <Link to="/register" className="hover:underline">
+            <Link to="/register" className="hover:underline text-primary">
               Register
             </Link>
           </>
         )}
       </nav>
+      {/* Mobile menu toggle could be added later */}
     </header>
   )
 }

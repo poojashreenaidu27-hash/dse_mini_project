@@ -24,24 +24,23 @@ function Login() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
-
   const { addNotification } = useNotification();
   const onSubmit = async (data: FormData) => {
     try {
       await login(data.email, data.password);
-      navigate('/');
+      navigate('/')
     } catch (e: any) {
-      addNotification('error', e.message || 'Login failed');
+      addNotification('error', e.message || 'Login failed')
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-primary p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md bg-white p-6 rounded shadow"
+        className="w-full max-w-md bg-card p-6 rounded-lg shadow-lg"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-textPrimary">Login</h2>
 
         <Input
           id="email"
@@ -60,13 +59,13 @@ function Login() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full bg-accent text-white hover:bg-accentHover transition"
         >
           {isSubmitting ? 'Logging in…' : 'Login'}
         </Button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

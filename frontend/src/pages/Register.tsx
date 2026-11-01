@@ -8,7 +8,6 @@ import { Input } from '../components/ui/Input'
 import { Button } from '../components/ui/Button'
 import { useNotification } from '../context/NotificationContext'
 
-
 const schema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
@@ -26,24 +25,23 @@ function Register() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
-
   const { addNotification } = useNotification();
   const onSubmit = async (data: FormData) => {
     try {
       await registerUser(data.email, data.password, data.displayName);
-      navigate('/');
+      navigate('/')
     } catch (e: any) {
-      addNotification('error', e.message || 'Registration failed');
+      addNotification('error', e.message || 'Registration failed')
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-primary p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md bg-white p-6 rounded shadow"
+        className="w-full max-w-md bg-card p-6 rounded-lg shadow-lg"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-textPrimary">Register</h2>
 
         <Input
           id="displayName"
@@ -69,13 +67,13 @@ function Register() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+          className="w-full bg-accent hover:bg-accentHover text-white transition"
         >
           {isSubmitting ? 'Registering…' : 'Register'}
         </Button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;

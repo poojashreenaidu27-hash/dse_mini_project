@@ -12,7 +12,6 @@ import Button from '../components/ui/Button';
 
 import type { ComplaintCreate, Complaint } from '../types';
 
-
 // Static options – keep in sync with backend enum values.
 const categories = [
   'Wi-Fi and network connectivity',
@@ -23,7 +22,7 @@ const categories = [
   'Furniture and infrastructure',
   'Cleanliness and sanitation',
   'Other maintenance issues',
-]
+];
 
 const locations = [
   'Computer Lab',
@@ -35,7 +34,7 @@ const locations = [
   'Administrative Block',
   'Cafeteria',
   'Campus Common Area',
-]
+];
 
 const schema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters' }),
@@ -43,18 +42,17 @@ const schema = z.object({
   category: z.string().refine((val) => categories.includes(val), { message: 'Invalid category' }),
   location: z.string().refine((val) => locations.includes(val), { message: 'Invalid location' }),
   severity: z.coerce.number().int().min(1, { message: 'Severity must be an integer between 1 and 5' }).max(5, { message: 'Severity must be an integer between 1 and 5' }),
-})
+});
 
-
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 function SubmitComplaint() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<FormData>({ resolver: zodResolver(schema) as any });
 
   const { addNotification } = useNotification();
   const onSubmit = async (data: FormData) => {
@@ -80,22 +78,17 @@ function SubmitComplaint() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-xl bg-white p-6 rounded shadow"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Submit a Complaint</h2>
+    <div className="flex items-center justify-center min-h-screen bg-primary p-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl bg-card p-6 rounded shadow-lg">
+        <h2 className="text-2xl font-bold mb-4 text-center text-textPrimary">Submit a Complaint</h2>
         {/* Title */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="title">
-            Title
-          </label>
+          <label className="block text-sm font-medium mb-1 text-textPrimary" htmlFor="title">Title</label>
           <input
             id="title"
             type="text"
             {...register('title')}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
           />
           {errors.title && (
             <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
@@ -103,14 +96,12 @@ function SubmitComplaint() {
         </div>
         {/* Description */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="description">
-            Description
-          </label>
+          <label className="block text-sm font-medium mb-1 text-textPrimary" htmlFor="description">Description</label>
           <textarea
             id="description"
             rows={4}
             {...register('description')}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
           />
           {errors.description && (
             <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>
@@ -118,13 +109,11 @@ function SubmitComplaint() {
         </div>
         {/* Category */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="category">
-            Category
-          </label>
+          <label className="block text-sm font-medium mb-1 text-textPrimary" htmlFor="category">Category</label>
           <select
             id="category"
             {...register('category')}
-            className="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 bg-card focus:outline-none focus:ring-2 focus:ring-accent"
           >
             <option value="">Select a category</option>
             {categories.map((c) => (
@@ -139,13 +128,11 @@ function SubmitComplaint() {
         </div>
         {/* Location */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="location">
-            Location
-          </label>
+          <label className="block text-sm font-medium mb-1 text-textPrimary" htmlFor="location">Location</label>
           <select
             id="location"
             {...register('location')}
-            className="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 bg-card focus:outline-none focus:ring-2 focus:ring-accent"
           >
             <option value="">Select a location</option>
             {locations.map((l) => (
@@ -160,32 +147,25 @@ function SubmitComplaint() {
         </div>
         {/* Severity */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="severity">
-            Severity (1‑5)
-          </label>
+          <label className="block text-sm font-medium mb-1 text-textPrimary" htmlFor="severity">Severity (1‑5)</label>
           <input
             id="severity"
             type="number"
             min={1}
             max={5}
             {...register('severity', { valueAsNumber: true })}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
           />
           {errors.severity && (
             <p className="text-red-600 text-sm mt-1">{errors.severity.message}</p>
           )}
         </div>
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
+        <Button type="submit" disabled={isSubmitting} className="w-full bg-accent text-white py-2 rounded hover:bg-accentHover transition">
           {isSubmitting ? 'Submitting…' : 'Submit Complaint'}
         </Button>
       </form>
     </div>
-  )
+  );
 }
 
-export default SubmitComplaint
-
+export default SubmitComplaint;

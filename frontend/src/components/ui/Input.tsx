@@ -9,11 +9,11 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 export const Input: React.FC<InputProps> = ({ label, error, className = '', ...rest }) => {
   const inputCls =
-    'w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+    'w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary'
   return (
     <div className={`mb-4 ${className}`}>
       {label && (
-        <label className="block text-sm font-medium mb-1" htmlFor={rest.id as string}>
+        <label className="block text-sm font-medium mb-1 text-primary" htmlFor={rest.id as string}>
           {label}
         </label>
       )}
