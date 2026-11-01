@@ -1,57 +1,56 @@
-// src/context/NotificationContext.tsx
-import React, { createContext, useContext, useState } from 'react'
-import { Notification } from '../components/ui/Notification'
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { Notification, type NotificationType } from '../components/ui/Notification';
 
-type NotificationItem = {
-  id: number
-  type: 'error' | 'success' | 'info'
-  message: string
+interface NotificationItem {
+  id: number;
+  type: NotificationType;
+  message: string;
 }
 
-type NotificationContextProps = {
-  addNotification: (type: NotificationItem['type'], message: string) => void
-  removeNotification: (id: number) => void
+interface NotificationContextProps {
+  addNotification: (type: NotificationType, message: string) => void;
+  removeNotification: (id: number) => void;
 }
 
-const NotificationContext = createContext<NotificationContextProps | undefined>(undefined)
+const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [notifications, setNotifications] = useState<NotificationItem[]>([])
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
-  const addNotification = (type: NotificationItem['type'], message: string) => {
-    const id = Date.now()
-    setNotifications((prev) => [...prev, { id, type, message }])
-    // Auto-remove after 5 seconds
-    setTimeout(() => removeNotification(id), 5000)
-  }
+  const removeNotification = useCallback((id: number) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }, []);
 
-  const removeNotification = (id: number) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id))
-  }
+  const addNotification = useCallback((type: NotificationType, message: string) => {
+    const id = Date.now() + Math.random();
+    setNotifications((prev) => [...prev, { id, type, message }]);
+    setTimeout(() => {
+      removeNotification(id);
+    }, 6000);
+  }, [removeNotification]);
 
   return (
     <NotificationContext.Provider value={{ addNotification, removeNotification }}>
-      {/* Render notifications in the top‑right corner */}
-      <div className="fixed top-4 right-4 z-50 space-y-2">
+      <div className="fixed top-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none">
         {notifications.map((n) => (
-          <Notification
-            key={n.id}
-            type={n.type}
-            message={n.message}
-            onClose={() => removeNotification(n.id)}
-          />
+          <div key={n.id} className="pointer-events-auto">
+            <Notification
+              type={n.type}
+              message={n.message}
+              onClose={() => removeNotification(n.id)}
+            />
+          </div>
         ))}
       </div>
       {children}
     </NotificationContext.Provider>
-  )
-}
+  );
+};
 
 export const useNotification = () => {
-  const ctx = useContext(NotificationContext)
-  if (!ctx) throw new Error('useNotification must be used within NotificationProvider')
-  return ctx
-}
+  const ctx = useContext(NotificationContext);
+  if (!ctx) throw new Error('useNotification must be used within NotificationProvider');
+  return ctx;
+};
 
-export default NotificationProvider
-
+export default NotificationProvider;

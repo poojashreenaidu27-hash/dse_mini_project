@@ -30,6 +30,7 @@ def submit_anonymous(complaint_in: ComplaintCreate, db: Session = Depends(get_db
         db=db, data=complaint_in
     )
     return AnonymousComplaintConfirmation(
+        id=complaint.id,
         complaint_id=complaint.complaint_id,
         tracking_token=plaintext_token,
         category=complaint.category,
@@ -56,6 +57,7 @@ def submit_identified(
         db=db, user=current_user, data=complaint_in
     )
     return IdentifiedComplaintConfirmation(
+        id=complaint.id,
         complaint_id=complaint.complaint_id,
         category=complaint.category,
         location=complaint.location,

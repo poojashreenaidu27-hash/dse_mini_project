@@ -140,18 +140,31 @@ class ComplaintService:
         priority_flag: Optional[bool] = None,
     ) -> Complaint:
         """Update complaint status with administrative authorization."""
-        complaint = ComplaintRepository.get_by_complaint_id(db, complaint_id)
+        complaint = ComplaintRepository.get_by_complaint_id(db, str(complaint_id))
+        if not complaint and str(complaint_id).isdigit():
+            complaint = ComplaintRepository.get_by_id(db, int(complaint_id))
+
         if not complaint:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Complaint with ID '{complaint_id}' was not found.",
             )
 
+        status_mapping = {
+            "open": "Acknowledged",
+            "in_progress": "In Progress",
+            "resolved": "Resolved",
+            "reopened": "Reopened",
+            "on_hold": "On Hold",
+            "submitted": "Submitted",
+        }
+        resolved_status = status_mapping.get(new_status.lower().strip(), new_status)
+
         try:
             updated = ComplaintRepository.update_status(
                 db=db,
                 complaint=complaint,
-                new_status=new_status,
+                new_status=resolved_status,
                 public_remark=public_remark,
                 internal_note=internal_note,
                 updated_by_user_id=current_user.id,

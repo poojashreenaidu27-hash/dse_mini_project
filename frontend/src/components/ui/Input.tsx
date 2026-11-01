@@ -1,27 +1,52 @@
-// src/components/ui/Input.tsx
-import React from 'react'
+import React from 'react';
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label?: string
-  error?: string
-  className?: string
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  helperText?: string;
+  icon?: React.ReactNode;
+  containerClassName?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ label, error, className = '', ...rest }) => {
-  const inputCls =
-    'w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary'
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
+  { label, error, helperText, icon, id, className = '', containerClassName = '', ...rest },
+  ref
+) {
+  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+
   return (
-    <div className={`mb-4 ${className}`}>
+    <div className={`w-full ${containerClassName}`}>
       {label && (
-        <label className="block text-sm font-medium mb-1 text-primary" htmlFor={rest.id as string}>
+        <label
+          htmlFor={inputId}
+          className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
+        >
           {label}
         </label>
       )}
-      <input className={inputCls} {...rest} />
-      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
+      <div className="relative rounded-lg shadow-sm">
+        {icon && (
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            {icon}
+          </div>
+        )}
+        <input
+          ref={ref}
+          id={inputId}
+          className={`block w-full rounded-lg border bg-white py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-0 ${
+            icon ? 'pl-10 pr-3.5' : 'px-3.5'
+          } ${
+            error
+              ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200'
+              : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-200'
+          } ${className}`}
+          {...rest}
+        />
+      </div>
+      {error && <p className="text-xs text-rose-600 font-medium mt-1.5">{error}</p>}
+      {!error && helperText && <p className="text-xs text-slate-500 mt-1.5">{helperText}</p>}
     </div>
-  )
-}
+  );
+});
 
-export default Input
-
+export default Input;

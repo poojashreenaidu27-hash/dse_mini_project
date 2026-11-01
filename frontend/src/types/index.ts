@@ -1,47 +1,74 @@
 // src/types/index.ts
-// TypeScript interfaces that mirror the FastAPI backend schemas.
-// These are used throughout the React frontend for type‑safe API calls.
+// TypeScript interfaces mirroring the FastAPI backend schemas
 
 export interface User {
   id: number;
   email: string;
   display_name: string;
-  role: "campus_user" | "admin" | "analyst";
+  role: 'campus_user' | 'admin' | 'analyst';
+  is_active?: boolean;
 }
 
-export interface AuthResponse {
-  access_token: string; // JWT token returned by /auth/login (if used)
-  token_type: string; // typically "bearer"
+export interface AuthSessionResponse {
   user: User;
+  message: string;
+}
+
+export interface StatusHistoryItem {
+  id?: number;
+  old_status?: string | null;
+  new_status?: string;
+  status?: string;
+  public_remark?: string | null;
+  internal_note?: string | null;
+  timestamp?: string;
+  created_at?: string;
 }
 
 export interface Complaint {
   id: number;
-  title: string;
+  complaint_id: string;
+  title?: string;
   description: string;
   category: string;
   location: string;
-  severity: number;
-  submitted_at: string; // ISO datetime string
-  status: string; // e.g., "open", "in_progress", "resolved"
-  resolution_estimate?: number; // days, optional
-  tracking_token: string; // secret token for public tracking
-  reporter_id?: number; // null for anonymous
-}
-
-export interface ComplaintCreate {
-  title: string;
-  description: string;
-  category: string;
-  location: string;
-  severity: number;
-  // No reporter_id – backend determines from auth or anonymity.
+  severity: string;
+  status: string;
+  is_anonymous: boolean;
+  source?: string;
+  user_id?: number | null;
+  user_display_name?: string | null;
+  submitted_at: string;
+  resolved_at?: string | null;
+  predicted_resolution_hours?: number | null;
+  prediction_model_version?: string | null;
+  priority_flag?: boolean;
+  tracking_token?: string;
+  status_history?: StatusHistoryItem[];
 }
 
 export interface TrackingInfo {
-  complaint: Complaint;
+  complaint: {
+    id: number;
+    complaint_id: string;
+    title?: string;
+    description: string;
+    category: string;
+    location: string;
+    severity: string;
+    status: string;
+    submitted_at: string;
+    resolved_at?: string | null;
+    resolution_estimate?: number | null;
+    predicted_resolution_hours?: number | null;
+    tracking_token?: string;
+  };
   public_notes: string[];
-  status_history: Array<{ status: string; timestamp: string; note?: string }>;
+  status_history: Array<{
+    status: string;
+    timestamp: string | null;
+    note?: string | null;
+  }>;
 }
 
 export interface AnalyticsSummary {

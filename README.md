@@ -1,118 +1,167 @@
 # CampusFix
 
-## Overview
-CampusFix is a full‑stack application for anonymous and authenticated campus‑wide maintenance complaint reporting, tracking, and analytics.
+CampusFix is a full-stack, data-driven campus infrastructure complaint management and predictive maintenance analytics system. It enables anonymous and identified complaint reporting, real-time lifecycle tracking with cryptographic secret tokens, machine learning resolution duration forecasting, and an administrator facilities management dashboard.
 
-- **Backend** – FastAPI (Python) with SQLite, JWT‑based auth, complaint lifecycle, ML prediction pipeline, and comprehensive pytest suite.
-- **Frontend** – React + TypeScript, Vite, Tailwind CSS, React‑Router, Recharts for analytics, and a reusable UI component library.
+---
 
-The repo is ready to run locally without any external paid services.
+## Architecture Overview
+
+- **Backend**: FastAPI (Python 3.11+), SQLite ORM via SQLAlchemy, JWT session authentication, ML inference pipeline.
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, React Router, Recharts.
+- **Machine Learning**: Scikit-Learn regression model predicting repair durations based on facility location, maintenance category, urgency severity, and temporal benchmarks.
 
 ---
 
 ## Prerequisites
-- **Python 3.11+** (recommended via `pyenv` or your system Python).
-- **Node ≥18** and `npm`.
-- **Git** (already initialized).
+
+- **Python 3.11+** (Check via `python3 --version`)
+- **Node.js 18+** and **npm** (Check via `node -v` and `npm -v`)
 
 ---
 
-## Backend setup
+## How to Run the Project
+
+### 1. Backend Setup
+
+From the repository root (`/Users/nameadd/dse_mini_project`):
+
 ```bash
-# From the project root
-cd backend
-python -m venv .venv                     # create virtualenv (optional)
-source .venv/bin/activate                # Linux/macOS
-# .\.venv\Scripts\activate               # Windows PowerShell
+# 1. Create Python virtual environment (if not already created)
+python3 -m venv backend/.venv
+
+# 2. Activate virtual environment
+source backend/.venv/bin/activate       # macOS / Linux
+# .\backend\.venv\Scripts\activate      # Windows PowerShell
+
+# 3. Install Python dependencies
 pip install -r requirements.txt
-# Run migrations / seed data (already done on first start)
-uvicorn app.main:app --reload            # http://127.0.0.1:8000
-```
-- Swagger UI: <http://127.0.0.1:8000/api/docs>
-- Demo accounts (pre‑seeded):
-  - **admin** / `admin123`
-  - **analyst** / `analyst123`
-  - **user** / `user123`
 
-Run the test suite:
-```bash
-pytest -q                     # all 23 tests should pass
+# 4. Provision demo accounts & seed historical training data (already done)
+python backend/scripts/create_demo_accounts.py
+python backend/scripts/seed_synthetic_data.py
+
+# 5. Start the FastAPI backend server (from repository root)
+uvicorn backend.app.main:app --reload --port 8000
 ```
+
+- **Backend Health Check**: <http://127.0.0.1:8000/api/v1/health>
+- **Interactive Swagger API Docs**: <http://127.0.0.1:8000/api/docs>
 
 ---
 
-## Frontend setup
+### 2. Frontend Setup
+
+In a **new terminal window**, navigate to the `frontend` directory:
+
 ```bash
+# 1. Go to frontend directory
 cd frontend
-npm install                # install dependencies
-npm run dev                # start Vite dev server (http://localhost:5173)
-```
-Vite proxies `/api/*` to the backend (port 8000) automatically.
 
-### Available scripts
-- `npm run dev` – development server.
-- `npm run build` – production build (outputs to `dist/`).
-- `npm test` – runs Jest unit tests.
-- `npm run e2e` – runs Playwright end‑to‑end tests.
+# 2. Install Node dependencies (if not already installed)
+npm install
+
+# 3. Start Vite development server
+npm run dev
+```
+
+- **Web Application URL**: <http://localhost:5173>
+*(Vite proxies all `/api/*` calls automatically to the backend on port 8000).*
 
 ---
 
-## Testing
-### Unit tests (Jest)
-The repository includes a small test suite under `frontend/src/__tests__/` covering UI components and page form validation.
+## Pre-seeded Demo Accounts
+
+For grading, evaluation, or testing, the login page features **1-click instant demo fill buttons**, or you can enter these credentials manually:
+
+| Role | Email | Password | Access / Features |
+| :--- | :--- | :--- | :--- |
+| **Administrator** | `admin@campusfix.local` | `AdminCampusFix2026!` | Admin Dashboard, work order review, lifecycle status transitions, audit remarks |
+| **Data Analyst** | `analyst@campusfix.local` | `AnalystCampusFix2026!` | Campus Analytics, incident trends by facility & category, resolution KPIs |
+| **Student** | `student@campusfix.local` | `StudentCampusFix2026!` | Identified complaint submissions tied to student profile |
+
+> **Note:** Anonymous reporting requires **no account**. You can immediately submit issues from `/complaint` and receive a secret tracking token.
+
+---
+
+## Key Features
+
+1. **Anonymous & Identified Reporting**:
+   - Students can file reports without revealing identity.
+   - Generates a unique Complaint ID (`CFX-2026-XXXXX`) and a secret cryptographic tracking token (`cfx_sec_...`).
+
+2. **Predictive Resolution Estimator**:
+   - Machine learning model predicts expected resolution hours at the moment of submission using historical maintenance benchmarks.
+
+3. **Live Lifecycle Tracker**:
+   - Step progress visualization (`Submitted` → `Acknowledged` → `In Progress` → `Resolved`).
+   - Chronological audit notes and public technician remarks.
+
+4. **Simple & Neat Admin Dashboard**:
+   - Key metric cards (Total, Pending, In Progress, Resolved, Urgent Hazards).
+   - Real-time search by ID, location, or problem description.
+   - Filter by status and severity.
+   - Quick one-click status transition dropdowns.
+
+5. **Facilities Analytics**:
+   - Volume distribution across campus buildings and laboratories.
+   - Highest frequency maintenance categories.
+   - Weekly submission vs resolution velocity charts.
+
+---
+
+## Running the Automated Test Suite
+
+Run the full backend test suite covering authentication, anonymous tracking security, complaint lifecycle, and ML predictions:
+
 ```bash
-npm test
+backend/.venv/bin/pytest -q
 ```
-### End‑to‑end tests (Playwright)
-A Playwright script (`frontend/tests/e2e.spec.ts`) walks through the main user journey:
-1. Register a new user.
-2. Log in.
-3. Submit a complaint and capture the ID & tracking token.
-4. Log out, then track the complaint anonymously.
-5. Log in as the admin (admin/admin123) and update the status.
-6. Verify the analytics page shows data.
-Run it with:
+*(All 23 backend unit & integration tests should pass).*
+
+To verify the frontend build:
+
 ```bash
-npm run e2e
+npm --prefix frontend run build
 ```
-(Playwright will launch a headless Chromium instance.)
 
 ---
 
-## Project structure
+## Project Structure
+
 ```
-├─ backend/               # FastAPI server
-│   ├─ app/               # API routers, models, services
-│   └─ campusfix.db       # SQLite DB (generated on first run)
-├─ frontend/              # React + Vite
-│   ├─ src/               # Source code
-│   │   ├─ components/    # UI library (Button, Input, Badge, Table, Notification)
-│   │   ├─ context/       # Auth & Notification contexts
-│   │   ├─ pages/         # Route‑level pages (Home, Login, Register, …)
-│   │   └─ lib/           # API wrapper
-│   ├─ __tests__/         # Jest unit tests
-│   └─ tests/             # Playwright e2e tests
-└─ README.md               # This file
+dse_mini_project/
+├── backend/
+│   ├── app/
+│   │   ├── api/v1/endpoints/  # Auth, complaints, tracking, admin, analytics, ml
+│   │   ├── core/              # Security, JWT tokens, application settings
+│   │   ├── db/                # SQLAlchemy session & database initialization
+│   │   ├── ml/                # Scikit-learn training & inference pipelines
+│   │   ├── models/            # SQLAlchemy database models
+│   │   ├── repositories/      # Database CRUD layer
+│   │   ├── schemas/           # Pydantic request/response validation
+│   │   └── services/          # Business logic & authorization services
+│   ├── scripts/               # Account provisioning & synthetic data seeds
+│   └── tests/                 # 23 automated pytest suites
+├── data/                      # Synthetic complaint CSV dataset
+├── models/                    # Trained resolution estimator joblib & metadata
+├── frontend/
+│   ├── src/
+│   │   ├── components/        # Layout, Header, Input, Button, Badge, Notification
+│   │   ├── context/           # AuthContext & NotificationContext
+│   │   ├── lib/               # Typed API fetch client with credentials support
+│   │   ├── pages/             # Home, Submit, Track, AdminDashboard, Analytics, Auth
+│   │   ├── types/             # TypeScript schema interfaces
+│   │   ├── App.tsx            # Routes & route protection
+│   │   └── main.tsx           # React entry point
+│   ├── package.json
+│   └── vite.config.ts
+├── campusfix.db               # SQLite database
+├── requirements.txt           # Unified Python requirements
+└── README.md                  # Unified documentation
 ```
----
-
-## Running the full stack locally
-1. Start the backend (`uvicorn …`).
-2. In another terminal, start the frontend (`npm run dev`).
-3. Open <http://localhost:5173> in your browser and interact with the app.
-
-All core functionality (auth, complaint creation/tracking, admin dashboard, analytics) works out of the box.
-
----
-
-## Future enhancements (optional)
-- Dockerfiles for containerised deployment.
-- CI/CD pipeline (GitHub Actions) that runs backend tests, builds the frontend, and pushes Docker images.
-- Real‑time status updates via Server‑Sent Events or WebSockets.
-- Export analytics as CSV/Excel.
 
 ---
 
 ## License
-MIT © 2026 (Generated by Antigravity)
 
+MIT © 2026 CampusFix Team

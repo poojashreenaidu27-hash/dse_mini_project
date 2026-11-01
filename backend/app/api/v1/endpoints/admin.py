@@ -39,6 +39,7 @@ def _to_admin_response(c) -> ComplaintAdminResponse:
     return ComplaintAdminResponse(
         id=c.id,
         complaint_id=c.complaint_id,
+        title=c.description[:60] if c.description else c.category,
         user_id=c.user_id,
         user_display_name=user_name,
         is_anonymous=c.is_anonymous,
@@ -114,6 +115,7 @@ def get_admin_complaint_detail(
 
 
 @router.patch("/complaints/{complaint_id}/status", response_model=ComplaintAdminResponse)
+@router.patch("/complaints/{complaint_id}", response_model=ComplaintAdminResponse)
 def update_complaint_status(
     complaint_id: str,
     update_data: StatusUpdateRequest,
@@ -121,10 +123,16 @@ def update_complaint_status(
     db: Session = Depends(get_db),
 ):
     """Update complaint status, add public remark and/or private internal note."""
+    target_status = update_data.new_status or update_data.status
+    if not target_status:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Status field is required (either 'new_status' or 'status').",
+        )
     updated = ComplaintService.update_status(
         db=db,
         complaint_id=complaint_id,
-        new_status=update_data.new_status,
+        new_status=target_status,
         public_remark=update_data.public_remark,
         internal_note=update_data.internal_note,
         current_user=current_user,

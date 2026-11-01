@@ -30,7 +30,8 @@ class AdminStatusHistoryResponse(BaseModel):
 
 
 class StatusUpdateRequest(BaseModel):
-    new_status: str = Field(..., description="Target status (Submitted, Acknowledged, In Progress, On Hold, Resolved, Reopened)")
+    new_status: Optional[str] = Field(None, description="Target status (Submitted, Acknowledged, In Progress, On Hold, Resolved, Reopened)")
+    status: Optional[str] = Field(None, description="Alternative field for target status")
     public_remark: Optional[str] = Field(None, description="Public remark visible to complainant")
     internal_note: Optional[str] = Field(None, description="Confidential administrative note")
     priority_flag: Optional[bool] = Field(None, description="Optional priority escalation flag")

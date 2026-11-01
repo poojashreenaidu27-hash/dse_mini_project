@@ -1,35 +1,52 @@
-// src/components/ui/Notification.tsx
-import React from 'react'
+import React from 'react';
+import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
-type NotificationProps = {
-  /** 'error' | 'success' | 'info' */
-  type?: 'error' | 'success' | 'info'
-  message: string
-  /** Optional close handler */
-  onClose?: () => void
+export type NotificationType = 'error' | 'success' | 'info';
+
+interface NotificationProps {
+  type?: NotificationType;
+  message: string;
+  onClose?: () => void;
 }
 
-export const Notification: React.FC<NotificationProps> = ({ type = 'info', message, onClose }) => {
-  const base = 'p-3 rounded mb-4 flex items-center justify-between'
-  const variantClasses: Record<string, string> = {
-    error: 'bg-red-100 text-red-800 border border-red-300',
-    success: 'bg-green-100 text-green-800 border border-green-300',
-    info: 'bg-blue-100 text-blue-800 border border-blue-300',
-  }
+export const Notification: React.FC<NotificationProps> = ({
+  type = 'info',
+  message,
+  onClose,
+}) => {
+  const styles = {
+    error: {
+      bg: 'bg-rose-50 border-rose-200 text-rose-800',
+      icon: <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />,
+    },
+    success: {
+      bg: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+      icon: <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />,
+    },
+    info: {
+      bg: 'bg-indigo-50 border-indigo-200 text-indigo-800',
+      icon: <Info className="w-5 h-5 text-indigo-500 shrink-0" />,
+    },
+  }[type];
+
   return (
-    <div className={`${base} ${variantClasses[type]}`} role="alert">
-      <span>{message}</span>
+    <div
+      role="alert"
+      className={`flex items-start gap-3 p-3.5 rounded-xl border shadow-lg max-w-md w-full transition-all animate-in slide-in-from-top-2 duration-200 ${styles.bg}`}
+    >
+      {styles.icon}
+      <div className="flex-1 text-sm font-medium leading-relaxed">{message}</div>
       {onClose && (
         <button
           onClick={onClose}
-          className="ml-4 text-sm underline hover:text-gray-600"
+          className="text-slate-400 hover:text-slate-600 transition-colors p-0.5 rounded-lg -mr-1 -mt-1"
+          aria-label="Close"
         >
-          Close
+          <X className="w-4 h-4" />
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Notification
-
+export default Notification;

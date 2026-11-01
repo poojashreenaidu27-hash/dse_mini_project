@@ -20,6 +20,27 @@ from backend.app.services.analytics_service import AnalyticsService
 router = APIRouter(prefix="/analytics", tags=["Analytics & Predictive Insights"])
 
 
+@router.get("/summary")
+def get_analytics_summary(db: Session = Depends(get_db)):
+    """Retrieve high-level summary metrics for general analytics view."""
+    kpis = AnalyticsService.get_kpis(db=db)
+    cat_breakdown = AnalyticsService.get_category_breakdown(db=db)
+    loc_breakdown = AnalyticsService.get_location_breakdown(db=db)
+    return {
+        "total_complaints": kpis.total_complaints,
+        "open": kpis.open_complaints + kpis.in_progress_complaints,
+        "resolved": kpis.resolved_complaints,
+        "avg_resolution_time_days": round(kpis.avg_resolution_hours / 24.0, 2),
+        "top_categories": [
+            {"category": c.category, "count": c.count} for c in cat_breakdown[:5]
+        ],
+        "top_locations": [
+            {"location": l.location, "count": l.count} for l in loc_breakdown[:5]
+        ],
+    }
+
+
+
 @router.get("/kpis", response_model=AnalyticsKPIs)
 def get_kpis(
     source: Optional[str] = None,
