@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Input } from '../components/ui/Input'
 import { Button } from '../components/ui/Button'
-import { Notification } from '../components/ui/Notification'
+import { useNotification } from '../context/NotificationContext'
 
 const schema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -24,14 +24,14 @@ function Login() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
-  const [errorMsg, setErrorMsg] = useState<string>('')
 
+  const { addNotification } = useNotification();
   const onSubmit = async (data: FormData) => {
     try {
-      await login(data.email, data.password)
-      navigate('/')
+      await login(data.email, data.password);
+      navigate('/');
     } catch (e: any) {
-      setErrorMsg(e.message || 'Login failed')
+      addNotification('error', e.message || 'Login failed');
     }
   }
 
@@ -42,7 +42,7 @@ function Login() {
         className="w-full max-w-md bg-white p-6 rounded shadow"
       >
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-        {errorMsg && <Notification type="error" message={errorMsg} />}
+
         <Input
           id="email"
           type="email"

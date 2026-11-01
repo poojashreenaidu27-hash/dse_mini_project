@@ -3,8 +3,12 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
-import { apiPost, ApiResponse } from '../lib/api'
-import { ComplaintCreate, Complaint } from '../types'
+
+import { apiPost } from '../lib/api';
+import type { ApiResponse } from '../lib/api';
+
+import Button from '../components/ui/Button';
+
 
 // Static options – keep in sync with backend enum values.
 const categories = [
@@ -54,6 +58,7 @@ function SubmitComplaint() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
+  const { addNotification } = useNotification();
   const onSubmit = async (data: FormData) => {
     const payload: ComplaintCreate = {
       title: data.title,
@@ -61,21 +66,20 @@ function SubmitComplaint() {
       category: data.category,
       location: data.location,
       severity: data.severity,
-    }
+    };
     try {
       const res: ApiResponse<Complaint> = await apiPost<Complaint, typeof payload>(
         '/api/v1/complaints/identified',
         payload
-      )
-      if (res.error) throw new Error(res.error)
-      const comp = res.data
-      alert(`Complaint submitted!\nID: ${comp.id}\nTracking token: ${comp.tracking_token}`)
-      // After a successful submit, redirect to home or tracking page.
-      navigate('/')
+      );
+      if (res.error) throw new Error(res.error);
+      const comp = res.data;
+      addNotification('success', `Complaint submitted! ID: ${comp.id}, Token: ${comp.tracking_token}`);
+      navigate('/');
     } catch (e: any) {
-      alert(e.message || 'Failed to submit complaint')
+      addNotification('error', e.message || 'Failed to submit complaint');
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">

@@ -1,7 +1,9 @@
 // src/context/AuthContext.tsx
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { apiGet, apiPost, ApiResponse } from '../lib/api'
-import { User, AuthResponse } from '../types'
+import { createContext, useContext, useEffect, useState } from 'react';
+import type { ReactNode } from 'react'
+import { apiGet, apiPost } from '../lib/api';
+import type { ApiResponse } from '../lib/api';
+import type { User, AuthResponse } from '../types'
 
 interface AuthContextProps {
   user: User | null

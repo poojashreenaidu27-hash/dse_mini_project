@@ -1,6 +1,8 @@
+import * as React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import NotificationProvider from './context/NotificationContext'
+
 import { Header } from './components/layout/Header'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -10,17 +12,17 @@ import TrackComplaint from './pages/TrackComplaint'
 import AdminDashboard from './pages/AdminDashboard'
 import Analytics from './pages/Analytics'
 
-function PrivateRoute({ children }: { children: JSX.Element }) {
+function PrivateRoute({ children }: { children: React.ReactElement }) {
   const { user } = useAuth()
   return user ? children : <Navigate to="/login" replace />
 }
 
-function AdminRoute({ children }: { children: JSX.Element }) {
+function AdminRoute({ children }: { children: React.ReactElement }) {
   const { user } = useAuth()
   return user && user.role === 'admin' ? children : <Navigate to="/" replace />
 }
 
-import { Header } from './components/layout/Header'
+
 
 function App() {
   return (

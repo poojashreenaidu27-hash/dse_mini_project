@@ -1,7 +1,9 @@
 // src/pages/AdminDashboard.tsx
 import { useEffect, useState } from 'react'
-import { apiGet, apiPatch, ApiResponse } from '../lib/api'
-import { Complaint } from '../types'
+import { apiGet, apiPatch } from '../lib/api';
+import type { ApiResponse } from '../lib/api';
+import type { Complaint } from '../types';
+
 
 function AdminDashboard() {
   const [complaints, setComplaints] = useState<Complaint[]>([])

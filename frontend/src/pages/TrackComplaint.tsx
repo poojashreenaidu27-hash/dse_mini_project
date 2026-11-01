@@ -3,8 +3,10 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { apiGet, ApiResponse } from '../lib/api'
-import { TrackingInfo } from '../types'
+
+import { apiGet } from '../lib/api';
+import type { ApiResponse } from '../lib/api'
+import type { TrackingInfo } from '../types'
 
 const schema = z.object({
   complaintId: z.string().min(1, { message: 'Complaint ID is required' }),

@@ -21,7 +21,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const addNotification = (type: NotificationItem['type'], message: string) => {
     const id = Date.now()
     setNotifications((prev) => [...prev, { id, type, message }])
-    // Auto‑remove after 5 seconds
+    // Auto-remove after 5 seconds
     setTimeout(() => removeNotification(id), 5000)
   }
 

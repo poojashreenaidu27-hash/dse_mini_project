@@ -1,7 +1,9 @@
 // src/pages/Analytics.tsx
 import { useEffect, useState } from 'react'
-import { apiGet, ApiResponse } from '../lib/api'
-import { AnalyticsSummary } from '../types'
+import { apiGet } from '../lib/api';
+import type { ApiResponse } from '../lib/api';
+import type { AnalyticsSummary } from '../types';
+
 import {
   BarChart,
   Bar,
