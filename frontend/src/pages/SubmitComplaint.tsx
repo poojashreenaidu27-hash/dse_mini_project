@@ -3,11 +3,14 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
+import { useNotification } from '../context/NotificationContext';
 
 import { apiPost } from '../lib/api';
 import type { ApiResponse } from '../lib/api';
 
 import Button from '../components/ui/Button';
+
+import type { ComplaintCreate, Complaint } from '../types';
 
 
 // Static options – keep in sync with backend enum values.
@@ -37,16 +40,11 @@ const locations = [
 const schema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters' }),
   description: z.string().min(10, { message: 'Description must be at least 10 characters' }),
-  category: z.string().refine((val) => categories.includes(val), {
-    message: 'Invalid category',
-  }),
-  location: z.string().refine((val) => locations.includes(val), {
-    message: 'Invalid location',
-  }),
-  severity: z.coerce.number().int().min(1).max(5).refine((v) => Number.isInteger(v), {
-    message: 'Severity must be an integer between 1 and 5',
-  }),
+  category: z.string().refine((val) => categories.includes(val), { message: 'Invalid category' }),
+  location: z.string().refine((val) => locations.includes(val), { message: 'Invalid location' }),
+  severity: z.coerce.number().int().min(1, { message: 'Severity must be an integer between 1 and 5' }).max(5, { message: 'Severity must be an integer between 1 and 5' }),
 })
+
 
 type FormData = z.infer<typeof schema>
 
