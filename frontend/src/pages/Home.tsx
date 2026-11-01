@@ -1,6 +1,7 @@
 // src/pages/Home.tsx
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { Button } from '../components/ui/Button'
 
 function Home() {
   const { user, logout } = useAuth()
@@ -14,49 +15,31 @@ function Home() {
       <div className="flex flex-col gap-4 md:flex-row">
         {user ? (
           <>
-            <Link
-              to="/complaint"
-              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
+            <Button as={Link} to="/complaint" className="bg-blue-600 text-white hover:bg-blue-700">
               Submit Complaint
-            </Link>
+            </Button>
             {user.role === 'admin' && (
-              <Link
-                to="/admin"
-                className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-              >
+              <Button as={Link} to="/admin" className="bg-green-600 text-white hover:bg-green-700">
                 Admin Dashboard
-              </Link>
+              </Button>
             )}
-            <button
-              onClick={logout}
-              className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
-            >
+            <Button onClick={logout} className="bg-gray-600 text-white hover:bg-gray-700">
               Logout
-            </button>
+            </Button>
           </>
         ) : (
           <>
-            <Link
-              to="/login"
-              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
+            <Button as={Link} to="/login" className="bg-blue-600 text-white hover:bg-blue-700">
               Login
-            </Link>
-            <Link
-              to="/register"
-              className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
-            >
+            </Button>
+            <Button as={Link} to="/register" className="bg-indigo-600 text-white hover:bg-indigo-700">
               Register
-            </Link>
+            </Button>
           </>
         )}
-        <Link
-          to="/track"
-          className="px-6 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition"
-        >
+        <Button as={Link} to="/track" className="bg-teal-600 text-white hover:bg-teal-700">
           Track Complaint (anonymous)
-        </Link>
+        </Button>
       </div>
     </div>
   )

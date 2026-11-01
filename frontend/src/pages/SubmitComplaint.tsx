@@ -173,13 +173,13 @@ function SubmitComplaint() {
             <p className="text-red-600 text-sm mt-1">{errors.severity.message}</p>
           )}
         </div>
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
         >
           {isSubmitting ? 'Submitting…' : 'Submit Complaint'}
-        </button>
+        </Button>
       </form>
     </div>
   )
