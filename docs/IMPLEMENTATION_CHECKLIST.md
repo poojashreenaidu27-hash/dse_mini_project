@@ -106,3 +106,4 @@ Target: Academic Mini-Project (Second-year CSE - Data Science Essentials)
 - [ ] `docs/VIVA_PREPARATION.md` (including three-member work breakdown).
 - [ ] `data/DATA_DICTIONARY.md`.
 - [ ] Review diffs, verify clean working tree, commit in logical milestones.
+

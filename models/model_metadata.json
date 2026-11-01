@@ -1,0 +1,39 @@
+{
+  "model_name": "CampusFix Resolution Duration Estimator",
+  "version": "v1.0.0-20261101",
+  "algorithm": "scikit-learn Pipeline (random_forest)",
+  "metrics": {
+    "mae": 4.236,
+    "rmse": 6.294,
+    "r2": 0.873
+  },
+  "candidate_evaluations": {
+    "linear": {
+      "mae": 4.722,
+      "rmse": 7.18,
+      "r2": 0.835
+    },
+    "decision_tree": {
+      "mae": 4.534,
+      "rmse": 6.921,
+      "r2": 0.847
+    },
+    "random_forest": {
+      "mae": 4.236,
+      "rmse": 6.294,
+      "r2": 0.873
+    }
+  },
+  "features": [
+    "category",
+    "location",
+    "severity",
+    "submission_hour",
+    "submission_day_of_week"
+  ],
+  "training_sample_count": 317,
+  "test_sample_count": 80,
+  "trained_at": "2026-11-01T10:56:20.470430+00:00",
+  "target": "resolution_hours (non-negative float)",
+  "leakage_prevention": "Strictly limited to pre-submission variables"
+}
